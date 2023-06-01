@@ -1,15 +1,19 @@
 package main
 
-import "fmt"
-
 const (
-	deviceName   = "DeviceName"
-	deviceNumber = "DeviceNumber"
+	deviceName           = "DeviceName"
+	deviceNumber         = "DeviceNumber"
+	mpmeNumber           = "MpmeNumber"
+	temperature          = "Temperature"
+	relativeHumidity     = "RelativeHumidity"
+	athmosphericPressure = "AthmosphericPressure"
+	way                  = "Way"
+	wayError             = "WayError"
+	time                 = "Time"
+	timeError            = "TimeError"
+	travel               = "Travel"
+	travelError          = "TravelError"
+	unitOfPress          = "UnitOfPress"
 )
 
 var mapHtmlNames map[string]string
-
-func Hello() {
-	mapHtmlNames = make(map[string]string)
-	fmt.Println("Hello")
-}
