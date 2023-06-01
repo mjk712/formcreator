@@ -130,15 +130,15 @@
         <!-- #table speed -->
         {{range .SpeedTabl}}
         <tr>
-            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.SetValue}},0</td>
-            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.GetValue}},0</td>
-            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.ErrorValue}},0</td>
+            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.SetValue}}</td>
+            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.GetValue}}</td>
+            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.ErrorValue}}</td>
         </tr>
         {{end}}
         <!-- #end_table speed -->
         <tr>
             <td colspan="8"; style="font-size: 10pt; border:solid 1px black">Максимальное отклонение абсолютной погрешности, км/ч от 0 до 9,9 не более</td>
-            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.WayError}}</td>
+            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.SpeedError}}</td>
         </tr>
         <tr>
             <td colspan="8"; style="font-size: 10pt; border:solid 1px black">Допускаемая абсолютная погрешность, км/ч</td>
@@ -146,7 +146,7 @@
         </tr>
         <tr>
             <td colspan="8"; style="font-size: 10pt; border:solid 1px black">Максимальное отклонение абсолютной погрешности, км/ч от 10 до 100 не более</td>
-            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.WayError}}</td>
+            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.SpeedError}}</td>
         </tr>        
         <tr>
             <td colspan="8"; style="font-size: 10pt; border:solid 1px black">Допускаемая абсолютная погрешность, км/ч</td>
@@ -171,13 +171,13 @@
         <!-- #end_table speedup -->
         <tr>
             <td colspan="8"; style="border:solid 1px black">Максимальное отклонение абсолютной погрешности, м/с&sup2; </td>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">#SpeedupAbsError</td>
+            <td colspan="3"; style="border:solid 1px black; text-align: center">{{.SpeedUpError}}</td>
         </tr>
         <tr>
             <td colspan="8"; style="border:solid 1px black">Допускаемая абсолютная погрешность, м/с&sup2;</td>
             <td colspan="3"; style="border:solid 1px black; text-align: center">± 0,02</td>
         </tr>
-        <tr><th colspan="11"; style="height: 1.2cm">7.5 Определение основной абсолютной погрешности измерений давления в тормозной магистрали (по первому каналу и третьему) </th></tr>
+        <tr><th colspan="11"; style="height: 1.2cm">7.5 Определение основной абсолютной погрешности измерений давления в тормозной магистрали (по первому каналу) </th></tr>
 
         <tr><td colspan="11">Таблица 4</td></tr>
         <tr>
@@ -198,7 +198,7 @@
 
         <tr>
             <td colspan="8"; style="border:solid 1px black">Максимальное отклонение абсолютной погрешности, {{.UnitOfPress}}</td>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">#Channel1AbsError</td>
+            <td colspan="3"; style="border:solid 1px black; text-align: center">{{.Channel1AbsError}}</td>
         </tr>
         <tr>
             <td colspan="8"; style="border:solid 1px black">Допускаемая абсолютная погрешность, {{.UnitOfPress}}</td>
@@ -224,7 +224,7 @@
         <!-- #end_table press_2 -->     
         <tr>
             <td colspan="8"; style="font-size: 10pt; border:solid 1px black">Максимальное отклонение абсолютной погрешности, {{.UnitOfPress}}</td>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">#Channel2AbsError</td>
+            <td colspan="3"; style="border:solid 1px black; text-align: center">{{.Channel2AbsError}}</td>
         </tr>
         <tr>
             <td colspan="8"; style="font-size: 10pt; border:solid 1px black">Допускаемая абсолютная погрешность, {{.UnitOfPress}}</td>
@@ -284,12 +284,12 @@
         
         <tr><td> </td></tr>
         <tr><td> </td></tr>
-        <tr><td colspan="11"><b>Заключение:</b> #Result</td></tr>
+        <tr><td colspan="11"><b>Заключение:</b> {{.Result}}</td></tr>
         <tr><td> </td></tr>
         <tr>
             <td> </td>
             <td colspan="6">Поверитель</td>
-            <td colspan="4">#Surname</td>
+            <td colspan="4">{{.Surname}}</td>
         </tr>
         
         

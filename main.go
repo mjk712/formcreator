@@ -17,7 +17,7 @@ var table2SetValues []string
 var table2GetValues []string
 var table2ErrorValues []string
 
-// --------------------Таблица - Определение основной абсолютной погрешности измерений давления в тормозной магистрали (по первому каналу и третьему)-------
+// --------------------Таблица - Определение основной абсолютной погрешности измерений давления в тормозной магистрали (по первому каналу)-------
 var table3SetValues []string
 var table3GetValues []string
 var table3ErrorValues []string
@@ -27,11 +27,16 @@ var table4SetValues []string
 var table4GetValues []string
 var table4ErrorValues []string
 
+// --------------------Таблица - Определение основной приведенной погрешности измерений давления в тормозной магистрали (по третьему каналу)-------
+var table5SetValues []string
+var table5GetValues []string
+var table5ErrorValues []string
+
 func main() {
 
 	mapHtmlNames = make(map[string]string)
 
-	file, err := os.Open("test.txt")
+	file, err := os.Open("test1.txt")
 	if err != nil {
 		fmt.Print("Err open txt")
 	}
@@ -63,6 +68,10 @@ func main() {
 
 	strTravelTable := "	Имитируемое: 100 м, пройденное: 99.92 м, погрешность: 0.08 м"
 
+	strResult := "	БУ-3ПС "
+
+	strSurname := "Фамилия проверяющего: "
+
 	data := bufio.NewScanner(file)
 
 	// Сканируем txt файл
@@ -79,9 +88,9 @@ func main() {
 			str = ""
 		}
 		//------------------------------Тут занимаемся поиском нужных переменных и записью их в файл----------------------------------
-		//Оно работает, но лучше сделайте парсинг как в таблицах, так правильнее, но мне лень пока
 		if strings.Contains(str, strDeviceName) {
-			mapHtmlNames[deviceName] = str[15:]
+			value := strings.Replace(str, strDeviceName, "", -1)
+			mapHtmlNames[deviceName] = value
 			fmt.Println(mapHtmlNames[deviceName])
 		}
 		//Вот как тут парс лучше делать
@@ -91,6 +100,16 @@ func main() {
 			value3 := strings.Replace(value2, ")", "", -1)
 			mapHtmlNames[unitOfPress] = value3
 			fmt.Println(mapHtmlNames[unitOfPress])
+		}
+		if strings.Contains(str, strResult) {
+			value := strings.Replace(str, "	БУ-3ПС ", "", -1)
+			mapHtmlNames[result] = value
+			fmt.Println(mapHtmlNames[result])
+		}
+		if strings.Contains(str, strSurname) {
+			value := strings.Replace(str, "Фамилия проверяющего: ", "", -1)
+			mapHtmlNames[surname] = value
+			fmt.Println(mapHtmlNames[surname])
 		}
 		if strings.Contains(str, iDeviceNumber) {
 			mapHtmlNames[deviceNumber] = str[23:]
@@ -117,7 +136,7 @@ func main() {
 			value := strings.Replace(str, "	Имитируемая: ", "", -1)
 			value2 := strings.Replace(value, ", на индикаторе: ", "|", -1)
 			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
-			value4 := strings.Replace(value3, ".0", "", -1)
+			value4 := strings.Replace(value3, ".", ",", -1)
 			s := strings.Split(value4, "|")
 			tableSetValues = append(tableSetValues, s[0])
 			tableGetValues = append(tableGetValues, s[1])
@@ -157,7 +176,20 @@ func main() {
 			table4SetValues = append(table4SetValues, s[0])
 			table4GetValues = append(table4GetValues, s[1])
 			table4ErrorValues = append(table4ErrorValues, s[2])
-			if len(table4SetValues) <= 15 {
+			if len(table4SetValues) <= 8 {
+				str = ""
+			}
+		}
+		if strings.Contains(str, str3TableValues) {
+			value := strings.Replace(str, "	Имитируемое: ", "", -1)
+			value2 := strings.Replace(value, ", измеренное: ", "|", -1)
+			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
+			value4 := strings.Replace(value3, ".", ",", -1)
+			s := strings.Split(value4, "|")
+			table5SetValues = append(table5SetValues, s[0])
+			table5GetValues = append(table5GetValues, s[1])
+			table5ErrorValues = append(table5ErrorValues, s[2])
+			if len(table5SetValues) <= 8 {
 				str = ""
 			}
 		}

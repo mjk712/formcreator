@@ -22,3 +22,9 @@ type Press2Table struct {
 	GetValue   string
 	ErrorValue string
 }
+
+type Press3Table struct {
+	SetValue   string
+	GetValue   string
+	ErrorValue string
+}

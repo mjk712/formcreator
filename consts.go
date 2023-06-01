@@ -14,6 +14,8 @@ const (
 	travel               = "Travel"
 	travelError          = "TravelError"
 	unitOfPress          = "UnitOfPress"
+	result               = "Result"
+	surname              = "Surname"
 )
 
 var mapHtmlNames map[string]string

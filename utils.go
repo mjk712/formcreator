@@ -4,7 +4,11 @@ import (
 	"fmt"
 	"html/template"
 	"os"
+	"strconv"
+	"strings"
 )
+
+var htmlPath string
 
 type htmlTest struct {
 	DeviceName           string
@@ -16,10 +20,18 @@ type htmlTest struct {
 	RelativeHumidity     string
 	AthmosphericPressure string
 	UnitOfPress          string
+	SpeedError           string
+	SpeedUpError         string
+	Channel1AbsError     string
+	Channel2AbsError     string
+	Channel3AbsError     string
+	Result               string
+	Surname              string
 	SpeedTabl            interface{}
 	SpeedUpTabl          interface{}
 	PressTabl            interface{}
 	Press2Tabl           interface{}
+	Press3Tabl           interface{}
 	//----------Определение основной абсолютной погрешности измерений пройденного пути-------
 	Way      string
 	WayError string
@@ -29,6 +41,29 @@ type htmlTest struct {
 	//----------Определение основной абсолютной погрешности измерений перемещения транспортного средства от заданной отметки----
 	Travel      string
 	TravelError string
+	//------------test test test---------------
+	TestTest string
+}
+
+func maxErrElem(s []string) string {
+	var max float64
+	max = 0
+	for i, element := range s {
+		if i > 8 {
+			break
+		} // Было бы круто менять тут значение динамически под размер таблицы
+		el := strings.Replace(element, ",", ".", 1)
+		a, err := strconv.ParseFloat(el, 64)
+		if err != nil {
+			return err.Error()
+		}
+		if a > max {
+			max = a
+		}
+	}
+	redMax := fmt.Sprintf("%.1f", max)
+	out := strings.Replace(redMax, ".", ",", 1)
+	return out
 }
 
 func addhtml() {
@@ -55,18 +90,26 @@ func addhtml() {
 		TimeError:            mapHtmlNames[timeError],
 		Travel:               mapHtmlNames[travel],
 		TravelError:          mapHtmlNames[travelError],
+		Result:               mapHtmlNames[result],
+		Surname:              mapHtmlNames[surname],
+		SpeedError:           maxErrElem(tableErrorValues),
+		SpeedUpError:         maxErrElem(table2ErrorValues),
+		Channel1AbsError:     maxErrElem(table3ErrorValues),
+		Channel2AbsError:     maxErrElem(table4ErrorValues),
+		Channel3AbsError:     maxErrElem(table5ErrorValues),
+		TestTest:             "22",
 
 		Data:         "29.05.2023",
 		ReportNumber: "0001",
 		SpeedTabl: []SpeedTable{
 			{SetValue: tableSetValues[0], GetValue: tableGetValues[0], ErrorValue: tableErrorValues[0]},
 			{SetValue: tableSetValues[1], GetValue: tableGetValues[1], ErrorValue: tableErrorValues[1]},
-			{SetValue: tableSetValues[2], GetValue: tableGetValues[2], ErrorValue: tableErrorValues[2]},
-			{SetValue: tableSetValues[3], GetValue: tableGetValues[3], ErrorValue: tableErrorValues[3]},
-			{SetValue: tableSetValues[4], GetValue: tableGetValues[4], ErrorValue: tableErrorValues[4]},
-			{SetValue: tableSetValues[5], GetValue: tableGetValues[5], ErrorValue: tableErrorValues[5]},
-			{SetValue: tableSetValues[6], GetValue: tableGetValues[6], ErrorValue: tableErrorValues[6]},
-			{SetValue: tableSetValues[7], GetValue: tableGetValues[7], ErrorValue: tableErrorValues[7]},
+			{SetValue: tableSetValues[2] + ",0", GetValue: tableGetValues[2] + ",0", ErrorValue: tableErrorValues[2]},
+			{SetValue: tableSetValues[3] + ",0", GetValue: tableGetValues[3] + ",0", ErrorValue: tableErrorValues[3]},
+			{SetValue: tableSetValues[4] + ",0", GetValue: tableGetValues[4] + ",0", ErrorValue: tableErrorValues[4]},
+			{SetValue: tableSetValues[5] + ",0", GetValue: tableGetValues[5] + ",0", ErrorValue: tableErrorValues[5]},
+			{SetValue: tableSetValues[6] + ",0", GetValue: tableGetValues[6] + ",0", ErrorValue: tableErrorValues[6]},
+			{SetValue: tableSetValues[7] + ",0", GetValue: tableGetValues[7] + ",0", ErrorValue: tableErrorValues[7]},
 		},
 		SpeedUpTabl: []SpeedUpTable{
 			{SetValue: table2SetValues[0], GetValue: table2GetValues[0], ErrorValue: table2ErrorValues[0]},
@@ -98,9 +141,27 @@ func addhtml() {
 			{SetValue: table4SetValues[6], GetValue: table4GetValues[6], ErrorValue: table4ErrorValues[6]},
 			{SetValue: table4SetValues[7], GetValue: table4GetValues[7], ErrorValue: table4ErrorValues[7]},
 		},
+		Press3Tabl: []Press3Table{
+			{SetValue: table5SetValues[0], GetValue: table5GetValues[0], ErrorValue: table5ErrorValues[0]},
+			{SetValue: table5SetValues[1], GetValue: table5GetValues[1], ErrorValue: table5ErrorValues[1]},
+			{SetValue: table5SetValues[2], GetValue: table5GetValues[2], ErrorValue: table5ErrorValues[2]},
+			{SetValue: table5SetValues[3], GetValue: table5GetValues[3], ErrorValue: table5ErrorValues[3]},
+			{SetValue: table5SetValues[4], GetValue: table5GetValues[4], ErrorValue: table5ErrorValues[4]},
+			{SetValue: table5SetValues[5], GetValue: table5GetValues[5], ErrorValue: table5ErrorValues[5]},
+			{SetValue: table5SetValues[6], GetValue: table5GetValues[6], ErrorValue: table5ErrorValues[6]},
+			{SetValue: table5SetValues[7], GetValue: table5GetValues[7], ErrorValue: table5ErrorValues[7]},
+		},
 	}
 
-	tmpl, _ := template.ParseFiles("report.html")
+	switch mapHtmlNames[deviceName] {
+	case "БУ-3ПС":
+		htmlPath = "report_bu3ps.html"
+
+	case "БУ-4":
+		htmlPath = "report.html"
+	}
+
+	tmpl, _ := template.ParseFiles(htmlPath)
 
 	err = tmpl.Execute(file, data)
 	fmt.Println(err)
