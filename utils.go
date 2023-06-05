@@ -157,8 +157,14 @@ func addhtml() {
 	case "БУ-3ПС":
 		htmlPath = "report_bu3ps.html"
 
+	case "БУ-3ПА":
+		htmlPath = "report_bu3pa3pv.html"
+
+	case "БУ-3ПВ":
+		htmlPath = "report_bu3pa3pv.html"
+
 	case "БУ-4":
-		htmlPath = "report.html"
+		htmlPath = "report_bu4.html"
 	}
 
 	tmpl, _ := template.ParseFiles(htmlPath)

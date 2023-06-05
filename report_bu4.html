@@ -44,7 +44,7 @@
         <tr><th colspan="11"; style="height: 1.17cm; font-size:18pt">ПРОТОКОЛ ПОВЕРКИ от {{.Data}} г. № {{.ReportNumber}}</th></tr>
         <tr><th colspan="11">1 Наименование, тип, заводской номер средства измерений:</th></tr>
         <!-- <tr><td colspan="11">Блок управления БУ-3ПА, зав. № 7235, МПМЭ, зав. № 087372</td></tr> -->
-        <tr><td colspan="11">Блок управления {{.DeviceName}}, зав. № {{.DeviceNumber}}, МПМЭ, зав. № {{.MpmeNumber}}</td></tr>
+        <tr><td colspan="11">Блок управления {{.DeviceName}}, зав. № {{.DeviceNumber}}</td></tr>
         <tr><th colspan="11">2 Наименование и адрес заказчика, ИНН:</th></tr>
         <!-- <tr><td colspan="11">ОАО "Электромеханика", г. Пенза, ул. Гоголя, д. 51/53, ИНН: 5836605167</td></tr> -->
         <tr><td colspan="11">#ClientName, #ClientAddress, ИНН: #ClientInn</td></tr>
@@ -177,7 +177,7 @@
             <td colspan="8"; style="border:solid 1px black">Допускаемая абсолютная погрешность, м/с&sup2;</td>
             <td colspan="3"; style="border:solid 1px black; text-align: center">± 0,02</td>
         </tr>
-        <tr><th colspan="11"; style="height: 1.2cm">7.5 Определение основной абсолютной погрешности измерений давления в тормозной магистрали (по первому и третьему каналу) </th></tr>
+        <tr><th colspan="11"; style="height: 1.2cm">7.5 Определение основной абсолютной погрешности измерений давления в тормозной магистрали (по первому каналу) </th></tr>
 
         <tr><td colspan="11">Таблица 4</td></tr>
         <tr>
@@ -230,34 +230,9 @@
             <td colspan="8"; style="font-size: 10pt; border:solid 1px black">Допускаемая абсолютная погрешность, {{.UnitOfPress}}</td>
             <td colspan="3"; style="border:solid 1px black; text-align: center">± 0.24</td><!-- #PressError2-->
         </tr>
-        <tr><th colspan="11"; style="height: 1.2cm">7.7 Определение основной приведенной погрешности измерений давления в тормозной магистрали (по третьему каналу) </th></tr>
-        <tr><td colspan="11">Таблица 6</td></tr>
-        <tr>
-            <td colspan="4"; style="height:1.06cm; border:solid 1px black; text-align: center">Заданные значения давления, {{.UnitOfPress}}</td>
-            <td colspan="4"; style="border:solid 1px black; text-align: center">Измеренные значения давления, {{.UnitOfPress}}</td>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">Абсолютная погрешность, {{.UnitOfPress}}</td>
-        </tr>  
-        <!-- #table press_3 -->
-        {{range .Press3Tabl}}        
-        <tr>
-            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.SetValue}}</td>
-            <td colspan="4"; style="border:solid 1px black; text-align: center">{{.GetValue}}</td>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">{{.ErrorValue}}</td>
-        </tr>
-        {{end}} 
-        <!-- #end_table press_3 -->     
-        <tr>
-            <td colspan="8"; style="font-size: 10pt; border:solid 1px black">Максимальное отклонение абсолютной погрешности, {{.UnitOfPress}}</td>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">{{.Channel2AbsError}}</td>
-            <!--КОСТЫЛЬ БЛЯ ТАМ 2 А НЕ 3-->
-        </tr>
-        <tr>
-            <td colspan="8"; style="font-size: 10pt; border:solid 1px black">Допускаемая абсолютная погрешность, {{.UnitOfPress}}</td>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">± 0.24</td>
-        </tr>
 
-        <tr><th colspan="11">7.8 Определение основной абсолютной погрешности измерений пройденного пути</th></tr>
-        <tr><td colspan="11">Таблица 7</td></tr>
+        <tr><th colspan="11">7.7 Определение основной абсолютной погрешности измерений пройденного пути</th></tr>
+        <tr><td colspan="11">Таблица 6</td></tr>
         <tr>
             <td colspan="4"; style="height:1.06cm; border:solid 1px black; text-align: center">Заданный путь, м</td>
             <td colspan="4"; style="border:solid 1px black; text-align: center">Пройденный путь, м</td>
@@ -273,8 +248,8 @@
             <td colspan="3"; style="border:solid 1px black; text-align: center">± 0,1</td>
         </tr>   
         
-        <tr><th colspan="11">7.9 Определение основной абсолютной погрешности отсчета текущего времени</th></tr>
-        <tr><td colspan="11">Таблица 8</td></tr>
+        <tr><th colspan="11">7.8 Определение основной абсолютной погрешности отсчета текущего времени</th></tr>
+        <tr><td colspan="11">Таблица 7</td></tr>
         <tr>
             <td colspan="3"; style="height:1.06cm; border:solid 1px black; text-align: center">Заданное значение времени, с</td>
             <td colspan="5"; style="border:solid 1px black; text-align: center">Заданное значение времени, с</td>
@@ -290,22 +265,6 @@
             <td colspan="3"; style="border:solid 1px black; text-align: center">± 3</td>
         </tr>          
         
-        <tr><th colspan="11"; style="height: 1.3cm">8.0 Определение основной абсолютной погрешности измерений перемещения транспортного средства от заданной отметки</th></tr>
-        <tr><td colspan="11">Таблица 9</td></tr>
-        <tr>
-            <td colspan="3"; style="height:1.06cm; border:solid 1px black; text-align: center">Заданное значение</td>
-            <td colspan="5"; style="border:solid 1px black; text-align: center">Измеренное значение перемещения, м</td>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">Абсолютная погрешность, м</td>
-        </tr>     
-        <tr>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">100</td>
-            <td colspan="5"; style="border:solid 1px black; text-align: center">{{.Travel}}</td>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">{{.TravelError}}</td>
-        </tr>    
-        <tr>
-            <td colspan="8"; style="border:solid 1px black">Допускаемая абсолютная погрешность, м не более</td>
-            <td colspan="3"; style="border:solid 1px black; text-align: center">± 0,5</td>
-        </tr> 
         
         <tr><td> </td></tr>
         <tr><td> </td></tr>

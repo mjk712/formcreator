@@ -8,6 +8,7 @@ import (
 )
 
 // --------------------Таблица - Определение основной абсолютной погрешности измерений скорости движения---------
+var table1Values []int
 var tableSetValues []string
 var tableGetValues []string
 var tableErrorValues []string
@@ -32,19 +33,23 @@ var table5SetValues []string
 var table5GetValues []string
 var table5ErrorValues []string
 
+var counter int
+var counter2 int
+var counter3 int
+var counter4 int
+var counter5 int
+
 func main() {
 
 	mapHtmlNames = make(map[string]string)
 
-	file, err := os.Open("test1.txt")
+	file, err := os.Open("txtbu3ps.txt")
 	if err != nil {
 		fmt.Print("Err open txt")
 	}
 	defer file.Close()
 
 	strDeviceName := "Поверка "
-
-	iDeviceNumber := "Номер БУ-3ПС: "
 
 	iMpmeNumber := "Номер МПМЭ: "
 
@@ -66,9 +71,7 @@ func main() {
 
 	strTimeTable := "	Имитируемое: 1800 c"
 
-	strTravelTable := "	Имитируемое: 100 м, пройденное: 99.92 м, погрешность: 0.08 м"
-
-	strResult := "	БУ-3ПС "
+	strTravelTable := "	Имитируемое: 100 м, пройденное:"
 
 	strSurname := "Фамилия проверяющего: "
 
@@ -77,6 +80,24 @@ func main() {
 	// Сканируем txt файл
 	for data.Scan() {
 		str := data.Text()
+
+		//cвич кейс для табличных значений
+		var value2name string
+		var value3name string
+
+		switch mapHtmlNames[deviceName] {
+
+		case "БУ-3ПВ":
+			value3name = ", измеренное: "
+			value2name = ", на индикаторе:  "
+
+		case "БУ-3ПС":
+			value2name = ", измеренное:  "
+
+		case "БУ-4":
+			value2name = ", на индикаторе:  "
+
+		}
 		//------------------------------Эта табличка первая иначе ломает всё-------------------------------------------------------------------------
 		if strings.Contains(str, strTravelTable) {
 			value := strings.Replace(str, "	Имитируемое: 100 м, пройденное: ", "", -1)
@@ -93,6 +114,9 @@ func main() {
 			mapHtmlNames[deviceName] = value
 			fmt.Println(mapHtmlNames[deviceName])
 		}
+		//--------------переменные которые зависят от device name--------------------
+		strResult := "	" + mapHtmlNames[deviceName] + " "
+		iDeviceNumber := "Номер " + mapHtmlNames[deviceName] + ": "
 		//Вот как тут парс лучше делать
 		if strings.Contains(str, strUnitOfPress) {
 			value := strings.Replace(str, "Контроль давлений ", "", -1)
@@ -102,7 +126,7 @@ func main() {
 			fmt.Println(mapHtmlNames[unitOfPress])
 		}
 		if strings.Contains(str, strResult) {
-			value := strings.Replace(str, "	БУ-3ПС ", "", -1)
+			value := strings.Replace(str, "	"+mapHtmlNames[deviceName]+" ", "", -1)
 			mapHtmlNames[result] = value
 			fmt.Println(mapHtmlNames[result])
 		}
@@ -112,7 +136,8 @@ func main() {
 			fmt.Println(mapHtmlNames[surname])
 		}
 		if strings.Contains(str, iDeviceNumber) {
-			mapHtmlNames[deviceNumber] = str[23:]
+			value := strings.Replace(str, iMpmeNumber, "", -1)
+			mapHtmlNames[deviceNumber] = value
 			fmt.Println(mapHtmlNames[deviceNumber])
 		}
 		if strings.Contains(str, iMpmeNumber) {
@@ -131,7 +156,10 @@ func main() {
 			mapHtmlNames[athmosphericPressure] = str[41:]
 			fmt.Println(mapHtmlNames[athmosphericPressure])
 		}
-		//------------------------------А вот тут уже таблицы идут, чтобы лучше разбираться в этом коде посмотри этот гайд https://www.youtube.com/watch?v=dQw4w9WgXcQ ----------------------
+
+		//------------------------------А вот тут уже таблицы идут, чтобы лучше разбираться в этом коде посмотри этот гайд https://www.youtube.com/watch?v=dQw4w9WgXcQ----------------------
+		//var grade rune = '_'
+		//var grade2 rune = '&'
 		if strings.Contains(str, strTableValues) {
 			value := strings.Replace(str, "	Имитируемая: ", "", -1)
 			value2 := strings.Replace(value, ", на индикаторе: ", "|", -1)
@@ -142,10 +170,28 @@ func main() {
 			tableGetValues = append(tableGetValues, s[1])
 			tableErrorValues = append(tableErrorValues, s[2])
 			str = ""
+			counter++
+			table1Values = append(table1Values, counter)
+			fmt.Println(table1Values)
 		}
+		/*if strings.Contains(str, strTableValues) {
+			value := strings.Replace(str, "	Имитируемая: ", "", -1)
+			value2 := strings.Replace(value, ", на индикаторе: ", "|", -1)
+			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
+			value4 := strings.Replace(value3, ".", ",", -1)
+			s := strings.Split(value4, "|")
+			tableSetValues = append(tableSetValues, s[0])
+			tableGetValues = append(tableGetValues, s[1])
+			tableErrorValues = append(tableErrorValues, s[2])
+			str = ""
+			counter++
+			table1Values = append(table1Values, counter)
+			fmt.Println(table1Values)
+		}*/
+
 		if strings.Contains(str, str2TableValues) {
 			value := strings.Replace(str, "	Имитируемое:  ", "", -1)
-			value2 := strings.Replace(value, ", измеренное:  ", "|", -1)
+			value2 := strings.Replace(value, value2name, "|", -1)
 			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
 			value4 := strings.Replace(value3, ".", ",", -1)
 			s := strings.Split(value4, "|")
@@ -153,10 +199,12 @@ func main() {
 			table2GetValues = append(table2GetValues, s[1])
 			table2ErrorValues = append(table2ErrorValues, s[2])
 			str = ""
+			counter2++
+			fmt.Println(counter2)
 		}
 		if strings.Contains(str, str3TableValues) {
 			value := strings.Replace(str, "	Имитируемое: ", "", -1)
-			value2 := strings.Replace(value, ", измеренное: ", "|", -1)
+			value2 := strings.Replace(value, value3name, "|", -1)
 			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
 			value4 := strings.Replace(value3, ".", ",", -1)
 			s := strings.Split(value4, "|")
@@ -166,6 +214,8 @@ func main() {
 			if len(table3SetValues) <= 8 {
 				str = ""
 			}
+			counter3++
+			fmt.Println(counter3)
 		}
 		if strings.Contains(str, str3TableValues) {
 			value := strings.Replace(str, "	Имитируемое: ", "", -1)
@@ -179,6 +229,8 @@ func main() {
 			if len(table4SetValues) <= 8 {
 				str = ""
 			}
+			counter4++
+			//fmt.Println(counter4)
 		}
 		if strings.Contains(str, str3TableValues) {
 			value := strings.Replace(str, "	Имитируемое: ", "", -1)
@@ -186,12 +238,20 @@ func main() {
 			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
 			value4 := strings.Replace(value3, ".", ",", -1)
 			s := strings.Split(value4, "|")
-			table5SetValues = append(table5SetValues, s[0])
-			table5GetValues = append(table5GetValues, s[1])
-			table5ErrorValues = append(table5ErrorValues, s[2])
+			if mapHtmlNames[deviceName] == "БУ-4" || mapHtmlNames[deviceName] == "БУ-3ПВ" {
+				table5SetValues = append(table5SetValues, "", "", "", "", "", "", "", "")
+				table5GetValues = append(table5GetValues, "", "", "", "", "", "")
+				table5ErrorValues = append(table5ErrorValues, "", "", "", "", "", "")
+			} else {
+				table5SetValues = append(table5SetValues, s[0])
+				table5GetValues = append(table5GetValues, s[1])
+				table5ErrorValues = append(table5ErrorValues, s[2])
+			}
 			if len(table5SetValues) <= 8 {
 				str = ""
 			}
+			counter5++
+			//fmt.Println(counter5)
 		}
 		if strings.Contains(str, strPathTable) {
 			value := strings.Replace(str, "	Имитируемый: 20000 м, пройденный: ", "", -1)
@@ -200,7 +260,7 @@ func main() {
 			s := strings.Split(value3, "|")
 			mapHtmlNames[way] = s[0]
 			mapHtmlNames[wayError] = s[1]
-			fmt.Println(mapHtmlNames[way], mapHtmlNames[wayError])
+			//fmt.Println(mapHtmlNames[way], mapHtmlNames[wayError])
 		}
 		if strings.Contains(str, strTimeTable) {
 			value := strings.Replace(str, "	Имитируемое: 1800 c, измеренное: ", "", -1)
@@ -208,8 +268,14 @@ func main() {
 			s := strings.Split(value2, "|")
 			mapHtmlNames[time] = s[0]
 			mapHtmlNames[timeError] = s[1]
-			fmt.Println(mapHtmlNames[time], mapHtmlNames[timeError])
+			//fmt.Println(mapHtmlNames[time], mapHtmlNames[timeError])
 		}
 	}
+	if mapHtmlNames[deviceName] == "БУ-3ПВ" {
+		tableSetValues = append(tableSetValues, "")
+		tableGetValues = append(tableGetValues, "")
+		tableErrorValues = append(tableErrorValues, "")
+	}
+
 	addhtml()
 }
