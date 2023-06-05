@@ -14,21 +14,25 @@ var tableGetValues []string
 var tableErrorValues []string
 
 // --------------------Таблица - Определение основной абсолютной погрешности измерений ускорения---------
+var table2Values []int
 var table2SetValues []string
 var table2GetValues []string
 var table2ErrorValues []string
 
 // --------------------Таблица - Определение основной абсолютной погрешности измерений давления в тормозной магистрали (по первому каналу)-------
+var table3Values []int
 var table3SetValues []string
 var table3GetValues []string
 var table3ErrorValues []string
 
 // --------------------Таблица - Определение основной приведенной погрешности измерений давления в тормозной магистрали (по второму каналу)-------
+var table4Values []int
 var table4SetValues []string
 var table4GetValues []string
 var table4ErrorValues []string
 
 // --------------------Таблица - Определение основной приведенной погрешности измерений давления в тормозной магистрали (по третьему каналу)-------
+var table5Values []int
 var table5SetValues []string
 var table5GetValues []string
 var table5ErrorValues []string
@@ -43,7 +47,7 @@ func main() {
 
 	mapHtmlNames = make(map[string]string)
 
-	file, err := os.Open("txtbu3ps.txt")
+	file, err := os.Open("txtbu3pv.txt")
 	if err != nil {
 		fmt.Print("Err open txt")
 	}
@@ -77,27 +81,15 @@ func main() {
 
 	data := bufio.NewScanner(file)
 
+	var txtlines []string
+
 	// Сканируем txt файл
 	for data.Scan() {
 		str := data.Text()
+		txtlines = append(txtlines, data.Text())
 
 		//cвич кейс для табличных значений
-		var value2name string
-		var value3name string
 
-		switch mapHtmlNames[deviceName] {
-
-		case "БУ-3ПВ":
-			value3name = ", измеренное: "
-			value2name = ", на индикаторе:  "
-
-		case "БУ-3ПС":
-			value2name = ", измеренное:  "
-
-		case "БУ-4":
-			value2name = ", на индикаторе:  "
-
-		}
 		//------------------------------Эта табличка первая иначе ломает всё-------------------------------------------------------------------------
 		if strings.Contains(str, strTravelTable) {
 			value := strings.Replace(str, "	Имитируемое: 100 м, пройденное: ", "", -1)
@@ -157,102 +149,8 @@ func main() {
 			fmt.Println(mapHtmlNames[athmosphericPressure])
 		}
 
-		//------------------------------А вот тут уже таблицы идут, чтобы лучше разбираться в этом коде посмотри этот гайд https://www.youtube.com/watch?v=dQw4w9WgXcQ----------------------
-		//var grade rune = '_'
-		//var grade2 rune = '&'
-		if strings.Contains(str, strTableValues) {
-			value := strings.Replace(str, "	Имитируемая: ", "", -1)
-			value2 := strings.Replace(value, ", на индикаторе: ", "|", -1)
-			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
-			value4 := strings.Replace(value3, ".", ",", -1)
-			s := strings.Split(value4, "|")
-			tableSetValues = append(tableSetValues, s[0])
-			tableGetValues = append(tableGetValues, s[1])
-			tableErrorValues = append(tableErrorValues, s[2])
-			str = ""
-			counter++
-			table1Values = append(table1Values, counter)
-			fmt.Println(table1Values)
-		}
-		/*if strings.Contains(str, strTableValues) {
-			value := strings.Replace(str, "	Имитируемая: ", "", -1)
-			value2 := strings.Replace(value, ", на индикаторе: ", "|", -1)
-			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
-			value4 := strings.Replace(value3, ".", ",", -1)
-			s := strings.Split(value4, "|")
-			tableSetValues = append(tableSetValues, s[0])
-			tableGetValues = append(tableGetValues, s[1])
-			tableErrorValues = append(tableErrorValues, s[2])
-			str = ""
-			counter++
-			table1Values = append(table1Values, counter)
-			fmt.Println(table1Values)
-		}*/
+		//------------------------------Тут идут последние таблицы по старому методу, чтобы лучше разбираться в этом коде посмотри этот гайд https://www.youtube.com/watch?v=dQw4w9WgXcQ----------------------
 
-		if strings.Contains(str, str2TableValues) {
-			value := strings.Replace(str, "	Имитируемое:  ", "", -1)
-			value2 := strings.Replace(value, value2name, "|", -1)
-			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
-			value4 := strings.Replace(value3, ".", ",", -1)
-			s := strings.Split(value4, "|")
-			table2SetValues = append(table2SetValues, s[0])
-			table2GetValues = append(table2GetValues, s[1])
-			table2ErrorValues = append(table2ErrorValues, s[2])
-			str = ""
-			counter2++
-			fmt.Println(counter2)
-		}
-		if strings.Contains(str, str3TableValues) {
-			value := strings.Replace(str, "	Имитируемое: ", "", -1)
-			value2 := strings.Replace(value, value3name, "|", -1)
-			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
-			value4 := strings.Replace(value3, ".", ",", -1)
-			s := strings.Split(value4, "|")
-			table3SetValues = append(table3SetValues, s[0])
-			table3GetValues = append(table3GetValues, s[1])
-			table3ErrorValues = append(table3ErrorValues, s[2])
-			if len(table3SetValues) <= 8 {
-				str = ""
-			}
-			counter3++
-			fmt.Println(counter3)
-		}
-		if strings.Contains(str, str3TableValues) {
-			value := strings.Replace(str, "	Имитируемое: ", "", -1)
-			value2 := strings.Replace(value, ", измеренное: ", "|", -1)
-			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
-			value4 := strings.Replace(value3, ".", ",", -1)
-			s := strings.Split(value4, "|")
-			table4SetValues = append(table4SetValues, s[0])
-			table4GetValues = append(table4GetValues, s[1])
-			table4ErrorValues = append(table4ErrorValues, s[2])
-			if len(table4SetValues) <= 8 {
-				str = ""
-			}
-			counter4++
-			//fmt.Println(counter4)
-		}
-		if strings.Contains(str, str3TableValues) {
-			value := strings.Replace(str, "	Имитируемое: ", "", -1)
-			value2 := strings.Replace(value, ", измеренное: ", "|", -1)
-			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
-			value4 := strings.Replace(value3, ".", ",", -1)
-			s := strings.Split(value4, "|")
-			if mapHtmlNames[deviceName] == "БУ-4" || mapHtmlNames[deviceName] == "БУ-3ПВ" {
-				table5SetValues = append(table5SetValues, "", "", "", "", "", "", "", "")
-				table5GetValues = append(table5GetValues, "", "", "", "", "", "")
-				table5ErrorValues = append(table5ErrorValues, "", "", "", "", "", "")
-			} else {
-				table5SetValues = append(table5SetValues, s[0])
-				table5GetValues = append(table5GetValues, s[1])
-				table5ErrorValues = append(table5ErrorValues, s[2])
-			}
-			if len(table5SetValues) <= 8 {
-				str = ""
-			}
-			counter5++
-			//fmt.Println(counter5)
-		}
 		if strings.Contains(str, strPathTable) {
 			value := strings.Replace(str, "	Имитируемый: 20000 м, пройденный: ", "", -1)
 			value2 := strings.Replace(value, ", погрешность: ", "|", -1)
@@ -271,11 +169,149 @@ func main() {
 			//fmt.Println(mapHtmlNames[time], mapHtmlNames[timeError])
 		}
 	}
+	//--------------------------------------------Начало записи в таблицы------------------
+	var value2name string
+	var value3name string
+	var value4tableName string
+	var value5tableName string
+
+	switch mapHtmlNames[deviceName] {
+
+	case "БУ-3ПВ":
+		value3name = ", измеренное: "
+		value2name = ", на индикаторе:  "
+		value5tableName = "Контроль самопроизвольного ухода локомотива"
+		value4tableName = "Давление по каналу 3"
+
+	case "БУ-3ПС":
+		value2name = ", измеренное: "
+		value3name = ", измеренное: "
+		value4tableName = "Давление по каналу 3"
+		value5tableName = "Контроль частоты вращения вала ДГУ (об/мин)"
+
+	case "БУ-4":
+		value2name = ", на индикаторе:  "
+		value3name = ", измеренное: "
+		value4tableName = "Контроль времени установления показаний скорости"
+	}
+	//---------------------------------------Заполнение первой таблицы----------------------
+	for i, v := range txtlines {
+		if v == "Контроль ускорения (м/с2)" {
+			break
+		}
+		//------------------та которая ломает-----------
+		if strings.Contains(v, strTravelTable) {
+			value := strings.Replace(v, "	Имитируемое: 100 м, пройденное: ", "", -1)
+			value2 := strings.Replace(value, ", погрешность: ", "|", -1)
+			s := strings.Split(value2, "|")
+			mapHtmlNames[travel] = s[0]
+			mapHtmlNames[travelError] = s[1]
+			fmt.Println(mapHtmlNames[travel], mapHtmlNames[travelError])
+			txtlines[i] = ""
+		}
+		//------------------А тут уже 1 таблица-----------
+		if strings.Contains(v, strTableValues) {
+			value := strings.Replace(v, "	Имитируемая: ", "", -1)
+			value2 := strings.Replace(value, ", на индикаторе: ", "|", -1)
+			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
+			value4 := strings.Replace(value3, ".", ",", -1)
+			s := strings.Split(value4, "|")
+			tableSetValues = append(tableSetValues, s[0])
+			tableGetValues = append(tableGetValues, s[1])
+			tableErrorValues = append(tableErrorValues, s[2])
+			txtlines[i] = ""
+			counter++
+			table1Values = append(table1Values, counter)
+		}
+	}
+	//---------------------------------------Заполнение второй таблицы----------------------
+	for i, v := range txtlines {
+		if v == "Контроль сигнала ТЯГА" {
+			break
+		}
+		if strings.Contains(v, str2TableValues) {
+			value := strings.Replace(v, "	Имитируемое:  ", "", -1)
+			value2 := strings.Replace(value, value2name, "|", -1)
+			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
+			value4 := strings.Replace(value3, ".", ",", -1)
+			s := strings.Split(value4, "|")
+			table2SetValues = append(table2SetValues, s[0])
+			table2GetValues = append(table2GetValues, s[1])
+			table2ErrorValues = append(table2ErrorValues, s[2])
+			txtlines[i] = ""
+			counter2++
+			table2Values = append(table2Values, counter2)
+		}
+	}
+	//---------------------------------------Заполнение третьей таблицы----------------------
+	for i, v := range txtlines {
+		if v == "Давление по каналу 2" {
+			break
+		}
+		if strings.Contains(v, str3TableValues) {
+			value := strings.Replace(v, "	Имитируемое: ", "", -1)
+			value2 := strings.Replace(value, value3name, "|", -1)
+			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
+			value4 := strings.Replace(value3, ".", ",", -1)
+			s := strings.Split(value4, "|")
+			table3SetValues = append(table3SetValues, s[0])
+			table3GetValues = append(table3GetValues, s[1])
+			table3ErrorValues = append(table3ErrorValues, s[2])
+			txtlines[i] = ""
+			counter3++
+			table3Values = append(table3Values, counter3)
+		}
+	}
+	//---------------------------------------Заполнение четвёртой таблицы----------------------
+	for i, v := range txtlines {
+		if v == value4tableName {
+			break
+		}
+		if strings.Contains(v, str3TableValues) {
+			value := strings.Replace(v, "	Имитируемое: ", "", -1)
+			value2 := strings.Replace(value, ", измеренное: ", "|", -1)
+			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
+			value4 := strings.Replace(value3, ".", ",", -1)
+			s := strings.Split(value4, "|")
+			table4SetValues = append(table4SetValues, s[0])
+			table4GetValues = append(table4GetValues, s[1])
+			table4ErrorValues = append(table4ErrorValues, s[2])
+			txtlines[i] = ""
+			counter4++
+			table4Values = append(table4Values, counter4)
+		}
+	}
+	//---------------------------------------Заполнение пятой таблицы----------------------
+	for i, v := range txtlines {
+		if v == value5tableName {
+			break
+		}
+		if strings.Contains(v, str3TableValues) {
+			value := strings.Replace(v, "	Имитируемое: ", "", -1)
+			value2 := strings.Replace(value, ", измеренное: ", "|", -1)
+			value3 := strings.Replace(value2, ", погрешность: ", "|", -1)
+			value4 := strings.Replace(value3, ".", ",", -1)
+			s := strings.Split(value4, "|")
+			if mapHtmlNames[deviceName] == "БУ-4" || mapHtmlNames[deviceName] == "БУ-3ПВ" {
+				table5SetValues = append(table5SetValues, "", "", "", "", "", "", "", "")
+				table5GetValues = append(table5GetValues, "", "", "", "", "", "")
+				table5ErrorValues = append(table5ErrorValues, "", "", "", "", "", "")
+			} else {
+				table5SetValues = append(table5SetValues, s[0])
+				table5GetValues = append(table5GetValues, s[1])
+				table5ErrorValues = append(table5ErrorValues, s[2])
+			}
+			txtlines[i] = ""
+			counter5++
+			table5Values = append(table5Values, counter5)
+		}
+	}
 	if mapHtmlNames[deviceName] == "БУ-3ПВ" {
 		tableSetValues = append(tableSetValues, "")
 		tableGetValues = append(tableGetValues, "")
 		tableErrorValues = append(tableErrorValues, "")
 	}
 
-	addhtml()
+	err = addhtml()
+	fmt.Println(err)
 }
